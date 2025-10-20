@@ -66,7 +66,7 @@ struct HomeEmptyView: View {
         .navigationDestination(isPresented: $promptView, destination: {
             PromptView()
         })
-        
+        .appBackground()
     }
 }
 

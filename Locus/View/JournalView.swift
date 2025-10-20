@@ -18,10 +18,10 @@ struct JournalView: View {
     
     var body: some View {
         ZStack{
-            Image("background")
-                .resizable()
-                .scaledToFill()
-                .ignoresSafeArea()
+//            Image("background")
+//                .resizable()
+//                .scaledToFill()
+//                .ignoresSafeArea()
             
             GeometryReader { geometry in
                 VStack(spacing: 20){
@@ -109,6 +109,7 @@ struct JournalView: View {
                 .padding(.top)
             }
         }
+        .appBackground()
         .navigationBarBackButtonHidden(true)
         
     }//END ZStack

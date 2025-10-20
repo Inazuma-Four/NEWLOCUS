@@ -10,6 +10,7 @@ import SwiftUI
 struct PromptView: View {
     
     @Environment(\.dismiss) var dismiss
+    @Environment(\.colorScheme) private var colorScheme
     
     @State var moveToJournalPromptView = false
     @State var moveToJournalView = false
@@ -29,7 +30,7 @@ struct PromptView: View {
                 .interactive()
             )
             .clipShape(Circle())
-            .padding(.horizontal, 27)
+            //.padding(.horizontal, 27)
             .buttonStyle(.glass)
             .padding(.top)
             VStack{
@@ -51,7 +52,7 @@ struct PromptView: View {
                 .frame(width: 350)
                 .glassEffect(
                     .clear
-                        .tint(Color.black.opacity(0.9))
+                        .tint(Color.gray.opacity(0.6))
                         .interactive(),
                     in: RoundedRectangle(cornerRadius: 10)
                 )
@@ -60,32 +61,64 @@ struct PromptView: View {
                     moveToJournalPromptView = true
                 } label: {
                     Text("Reflect on this prompt")
-                        .frame(maxWidth: .infinity)
-                        .padding()
+                        .font(.headline)
+                        .foregroundColor(colorScheme == .dark ? .black : .white) // <- cambia qui
+                        .frame(width: 350, height: 48)
+                        .background(
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 16)
+                                    .fill(colorScheme == .dark ? Color.white.opacity(0.6) : Color.black.opacity(0.6))
+                                    .blur(radius: 7)
+                            }
+                            )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16)
+                                .stroke(Color.white.opacity(0.3), lineWidth: 1)
+                        )
+                        .cornerRadius(16)
+                        .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
+//                        .frame(maxWidth: .infinity)
+//                        .padding()
                 }
-                .glassEffect(
-                    .clear
-                        .tint(Color.gray.opacity(0.6))
-                        .interactive()
-                )
-                .foregroundStyle(Color.white)
-                .padding(.horizontal, 30)
+//                .glassEffect(
+//                    .clear
+//                        .tint(Color.gray.opacity(0.6))
+//                        .interactive()
+//                )
+//                .foregroundStyle(Color.white)
+//                .padding(.horizontal, 30)
                 .padding(.top, 10)
                 
                 Button {
                     moveToJournalView = true
                 } label: {
                     Text("Write on your own")
-                        .frame(maxWidth: .infinity)
-                        .padding()
+                        .font(.headline)
+                        .foregroundColor(colorScheme == .dark ? .black : .white) // <- cambia qui
+                        .frame(width: 350, height: 48)
+                        .background(
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 16)
+                                    .fill(colorScheme == .dark ? Color.white.opacity(0.6) : Color.black.opacity(0.6))
+                                    .blur(radius: 7)
+                            }
+                            )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16)
+                                .stroke(Color.white.opacity(0.3), lineWidth: 1)
+                        )
+                        .cornerRadius(16)
+                        .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
+//                        .frame(maxWidth: .infinity)
+//                        .padding()
                 }
-                .glassEffect(
-                    .clear
-                        .tint(Color.gray.opacity(0.6))
-                        .interactive()
-                )
-                .foregroundStyle(Color.white)
-                .padding(.horizontal, 30)
+//                .glassEffect(
+//                    .clear
+//                        .tint(Color.gray.opacity(0.6))
+//                        .interactive()
+//                )
+//                .foregroundStyle(Color.white)
+//                .padding(.horizontal, 30)
                 .padding(.top,5)
                 
                 Spacer()
@@ -124,6 +157,7 @@ struct PromptView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
+        .appBackground()
         
         
     }

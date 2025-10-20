@@ -9,14 +9,21 @@ import SwiftUI
 struct GlassButton: View {
     var text: String
     var action: () -> Void
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         Button(action: action) {
             Text(text)
                 .font(.headline)
-                .foregroundColor(.primary) // <- cambia qui
+                .foregroundColor(colorScheme == .dark ? .black : .white) // <- cambia qui
                 .frame(width: 318, height: 48)
-                .glassEffect(.clear)
+                .background(
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(colorScheme == .dark ? Color.white.opacity(0.6) : Color.black.opacity(0.6))
+                            .blur(radius: 7)
+                    }
+                    )
                 .overlay(
                     RoundedRectangle(cornerRadius: 16)
                         .stroke(Color.white.opacity(0.3), lineWidth: 1)

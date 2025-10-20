@@ -32,9 +32,9 @@ class NotificationManager {
             content.sound = .default
             
             var dateComponents = DateComponents()
-            dateComponents.hour = 11
-            dateComponents.minute = 41
-            dateComponents.weekday = dayIndex + 1
+            dateComponents.hour = 12
+            dateComponents.minute = 44
+            dateComponents.weekday = dayIndex + 0
             
             let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
             

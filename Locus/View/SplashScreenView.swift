@@ -49,7 +49,7 @@ struct SplashScreenView: View {
                                     .frame(width: 250, height: 250)
                                     .opacity(opacity)
                                     .onAppear {
-                                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                                             withAnimation {
                                                 self.isFirst = false
                                             }

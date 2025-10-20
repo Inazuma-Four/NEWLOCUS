@@ -25,6 +25,7 @@ struct MainPageView: View {
             NotificationManager.shared.checkNotifPermission()
             NotificationManager.shared.addWeeklyNotifications()
         }
+        //.appBackground()
     }
         
 }

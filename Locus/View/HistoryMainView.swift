@@ -16,6 +16,7 @@ struct HistoryMainView: View {
             NotificationManager.shared.checkNotifPermission()
             NotificationManager.shared.addWeeklyNotifications()
         }
+        .appBackground()
     }
 }
 

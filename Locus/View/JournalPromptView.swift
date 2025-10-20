@@ -13,11 +13,11 @@ struct JournalPromptView: View {
     var body: some View {
         
         
-        ZStack {
-            Image("background")
-                .resizable()
-                .scaledToFill()
-                .ignoresSafeArea()
+        //ZStack {
+//            Image("background")
+//                .resizable()
+//                .scaledToFill()
+//                .ignoresSafeArea()
             
             VStack(spacing: 20) {
                 
@@ -127,9 +127,11 @@ struct JournalPromptView: View {
                 Spacer()
             }
             .padding(.bottom)
-        }
+            .appBackground()
+        
         .navigationBarBackButtonHidden(true)
     }
+        
     
     
     @ViewBuilder
