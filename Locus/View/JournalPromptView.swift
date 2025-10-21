@@ -65,11 +65,11 @@ struct JournalPromptView: View {
                     
                 }
                 .padding(.horizontal)
-                .padding(.top, 40)
+                .padding(.top)
                 
                 Text("How was your day?")
                     .font(.headline)
-                    .foregroundColor(.black)
+                    .foregroundColor(.primary)
                     .padding(.top, 10)
                 
                 HStack(spacing: 16) {
@@ -92,16 +92,20 @@ struct JournalPromptView: View {
                         .font(.subheadline)
                         .foregroundColor(.white.opacity(0.9))
                         .multilineTextAlignment(.leading)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
                 .padding()
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(Color.black.opacity(0.8))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                        .stroke(Color.gray.opacity(0.8), lineWidth: 1)
+                )
                 .cornerRadius(14)
                 .padding(.horizontal)
-                .padding(.top, -90)
                 
                 ZStack(alignment: .topLeading) {
-                    RoundedRectangle(cornerRadius: 20)
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
                         .fill(Color.gray.opacity(0.70))
                     
                     TextEditor(text: $journalText)
@@ -109,7 +113,7 @@ struct JournalPromptView: View {
                         .scrollContentBackground(.hidden)
                         .foregroundColor(.primary)
                         .font(.body)
-                        .frame(minHeight: 450)
+                        .frame(minHeight: 350)
                     
                     if journalText.isEmpty {
                         Text("Write your thoughts...")
@@ -120,9 +124,9 @@ struct JournalPromptView: View {
                     }
                     
                 }
-                .frame(height: 350)
+                .frame(height: 340)
                 .padding(.horizontal)
-                .padding(.top, 45)
+                .padding(.top, 40)
                 
                 Spacer()
             }
