@@ -105,7 +105,12 @@ struct PromptView: View {
             .padding(.top, 20)
         }
         .navigationDestination(isPresented: $moveToJournalPromptView) {
-            JournalPromptView(promptText: todayPrompt)
+            JournalPromptView(
+                newPromptText: todayPrompt, // <-- INI BARU
+                onSaveComplete: {
+                    dismiss()
+                }
+            )
         }
 
         

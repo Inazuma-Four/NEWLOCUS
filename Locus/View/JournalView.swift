@@ -169,59 +169,59 @@ struct JournalView: View {
     }
     
     // CHANGE: The save logic is now more advanced.
-        private func saveEntry() {
-            // 1. Load all existing entries for the given date.
-            var entries = FileManagerHelper.load(from: date)
-            
-            if let entryToEdit = entryToEdit {
-                // EDITING an existing entry
-                // Find the index of the entry we are editing.
-                if let index = entries.firstIndex(where: { $0.id == entryToEdit.id }) {
-                    if journalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                        // If text is cleared, remove the entry.
-                        entries.remove(at: index)
-                    } else {
-                        // Otherwise, update its properties.
-                        entries[index].text = journalText
-                        entries[index].feelingEmoji = selectedEmoji
-                        // Update the date to reflect the edit time
-                        entries[index].date = Date()
-                    }
+    private func saveEntry() {
+        // 1. Load all existing entries for the given date.
+        var entries = FileManagerHelper.load(from: date)
+        
+        if let entryToEdit = entryToEdit {
+            // EDITING an existing entry
+            // Find the index of the entry we are editing.
+            if let index = entries.firstIndex(where: { $0.id == entryToEdit.id }) {
+                if journalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    // If text is cleared, remove the entry.
+                    entries.remove(at: index)
+                } else {
+                    // Otherwise, update its properties.
+                    entries[index].text = journalText
+                    entries[index].feelingEmoji = selectedEmoji
+                    // Update the date to reflect the edit time
+                    entries[index].date = Date()
                 }
-            } else {
-                // ADDING a new entry
-                // Don't save if the text is empty.
-                guard !journalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-                    dismiss()
-                    return
-                }
-                // Use the current date and time for the new entry, but the day from the selectedDate
-                let newEntryDate = createDate(from: date)
-                let newEntry = JournalEntry(date: newEntryDate, feelingEmoji: selectedEmoji, text: journalText)
-                entries.append(newEntry)
             }
-            
-            // 2. Save the entire (potentially modified) array back to the file.
-            FileManagerHelper.save(entries: entries, for: date)
-            onSaveComplete()
-            dismiss()
+        } else {
+            // ADDING a new entry
+            // Don't save if the text is empty.
+            guard !journalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                dismiss()
+                return
+            }
+            // Use the current date and time for the new entry, but the day from the selectedDate
+            let newEntryDate = createDate(from: date)
+            let newEntry = JournalEntry(date: newEntryDate, feelingEmoji: selectedEmoji, text: journalText)
+            entries.append(newEntry)
         }
+        
+        // 2. Save the entire (potentially modified) array back to the file.
+        FileManagerHelper.save(entries: entries, for: date)
+        onSaveComplete()
+        dismiss()
+    }
     
     private func createDate(from selectedDate: Date) -> Date {
-            let calendar = Calendar.current
-            let dateComponents = calendar.dateComponents([.year, .month, .day], from: selectedDate)
-            let timeComponents = calendar.dateComponents([.hour, .minute, .second], from: Date())
-            
-            var finalComponents = DateComponents()
-            finalComponents.year = dateComponents.year
-            finalComponents.month = dateComponents.month
-            finalComponents.day = dateComponents.day
-            finalComponents.hour = timeComponents.hour
-            finalComponents.minute = timeComponents.minute
-            finalComponents.second = timeComponents.second
-            
-            return calendar.date(from: finalComponents) ?? Date()
-        }
+        let calendar = Calendar.current
+        let dateComponents = calendar.dateComponents([.year, .month, .day], from: selectedDate)
+        let timeComponents = calendar.dateComponents([.hour, .minute, .second], from: Date())
+        
+        var finalComponents = DateComponents()
+        finalComponents.year = dateComponents.year
+        finalComponents.month = dateComponents.month
+        finalComponents.day = dateComponents.day
+        finalComponents.hour = timeComponents.hour
+        finalComponents.minute = timeComponents.minute
+        finalComponents.second = timeComponents.second
+        
+        return calendar.date(from: finalComponents) ?? Date()
+    }
 }
 
 #Preview {

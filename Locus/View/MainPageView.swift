@@ -15,6 +15,7 @@ struct MainPageView: View {
     @State private var entriesForSelectedDate: [JournalEntry] = []
     @State private var entryToEdit: JournalEntry?
     @State private var showingJournalEntryView = false
+    @State private var showingJournalPromptView = false
     @State private var navPath = NavigationPath()
     
     var body: some View {
@@ -54,6 +55,16 @@ struct MainPageView: View {
                     )
                 }
             }
+            .navigationDestination(isPresented: $showingJournalPromptView) {
+                            if let entry = entryToEdit {
+                                JournalPromptView(
+                                    entryToEdit: entry,
+                                    onSaveComplete: {
+                                        loadEntries(for: selectedDate)
+                                    }
+                                )
+                            }
+                        }
         }
         .appBackground()
         .navigationBarBackButtonHidden(true)
@@ -93,14 +104,18 @@ struct MainPageView: View {
                     ForEach(entriesForSelectedDate) { entry in
                         Button(action: {
                             entryToEdit = entry
-                            showingJournalEntryView = true
+                            if entry.text.hasPrefix("Prompt: ") {
+                                showingJournalPromptView = true
+                            } else {
+                                showingJournalEntryView = true
+                            }
                         }) {
                             HStack(alignment: .top, spacing: 15) {
                                 Image(getImageName(for: entry.feelingEmoji))
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 45, height: 45)
-                                    .background(.ultraThinMaterial)
+                                    //.background(.ultraThinMaterial)
                                     .clipShape(RoundedRectangle(cornerRadius: 10))
                                 
                                 VStack(alignment: .leading, spacing: 5) {
