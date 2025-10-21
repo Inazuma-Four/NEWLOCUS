@@ -4,29 +4,23 @@
 //
 //  Created by Gaetano Pascarella on 17/10/25.
 //
-
 import SwiftUI
 
 struct JournalView: View {
     
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.colorScheme) private var colorScheme
+    
     @State private var journalText: String = ""
     @State private var selectedMood: Int? = nil
     
-    
-    
-    
     var body: some View {
-        ZStack{
-//            Image("background")
-//                .resizable()
-//                .scaledToFill()
-//                .ignoresSafeArea()
-            
-            GeometryReader { geometry in
-                VStack(spacing: 20){
+        ZStack {
+            ScrollView {
+                VStack(spacing: 20) {
                     
-                    HStack{
+                    // Header
+                    HStack {
                         Button(action: { dismiss() }) {
                             Image(systemName: "chevron.left")
                                 .font(.title)
@@ -45,7 +39,7 @@ struct JournalView: View {
                         Text("Your Journal")
                             .font(.system(size: 28, weight: .semibold))
                             .frame(maxWidth: .infinity, alignment: .center)
-                            .padding(.top,6)
+                            .padding(.top, 6)
                         
                         Spacer()
                         
@@ -61,15 +55,13 @@ struct JournalView: View {
                         )
                         .clipShape(Circle())
                         .buttonStyle(.glass)
-                        
-                        
-                    }//END HStack
+                    }
                     .padding(.horizontal)
-                    .padding(.top, 40)
+                    .padding(.top, 5)
                     
                     Text("How was your day?")
                         .font(.headline)
-                        .foregroundColor(.black)
+                        .foregroundColor(.primary)
                         .padding(.top, 10)
                     
                     // Mood selector
@@ -83,36 +75,43 @@ struct JournalView: View {
                     
                     // Journal text area
                     ZStack(alignment: .topLeading) {
-                        RoundedRectangle(cornerRadius: 20)
+                        RoundedRectangle(cornerRadius: 20, style: .continuous)
                             .fill(Color.gray.opacity(0.70))
-                            
+                        
+                        VStack(alignment: .leading, spacing: 0) {
+                            TextEditor(text: $journalText)
+                                .textEditorStyle(.plain)
+                                .scrollContentBackground(.hidden)
+                                .foregroundColor(.primary)
+                                .font(.body)
+                                .background(Color.clear)
+                                .frame(maxWidth: .infinity, minHeight: 300)
+                        }
+                        .padding(.horizontal, 18)
+                        .padding(.vertical, 16)
                         
                         if journalText.isEmpty {
                             Text("Write your thoughts here...")
                                 .foregroundColor(.white.opacity(0.7))
-                                .padding(.horizontal, 20)
-                                .padding(.vertical, 20)
                                 .font(.body)
+                                .padding(.horizontal, 24)
+                                .padding(.vertical, 24)
                         }
-                        
-                        TextEditor(text: $journalText)
-                            .padding(12)
-                            .scrollContentBackground(.hidden)
-                            .background(Color.clear)
                     }
-                    .frame(height: 550)
+                    .frame(maxWidth: .infinity, minHeight: 500)
                     .padding(.horizontal)
-                    .padding(.top, geometry.size.height * 0)
+                    .padding(.top, 2)
+                    
                     Spacer(minLength: 20)
-                        
                 }
                 .padding(.top)
+                .padding(.bottom, 24)
             }
+            .scrollDismissesKeyboard(.interactively)
         }
         .appBackground()
         .navigationBarBackButtonHidden(true)
-        
-    }//END ZStack
+    }
     
     @ViewBuilder
     private func moodButton(index: Int, imageName: String) -> some View {
@@ -139,8 +138,6 @@ struct JournalView: View {
     }
 }
 
-
 #Preview {
     JournalView()
 }
-
