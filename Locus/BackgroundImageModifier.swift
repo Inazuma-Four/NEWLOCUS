@@ -14,13 +14,6 @@ struct BackgroundImageModifier: ViewModifier {
     @Environment(\.colorScheme) private var colorScheme
     
     func body(content: Content) -> some View {
-        
-        //            .background(
-        //                Image("background")
-        ////                    .resizable()
-        //                    .scaledToFit()
-        //                    .ignoresSafeArea()
-        //            )
         ZStack {
             Group {
                 if colorScheme == .dark {

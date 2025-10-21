@@ -41,8 +41,6 @@ struct SplashScreenView: View {
 
             VStack {
                 Spacer()
-
-                // Icona centrale
                 Image(colorScheme == .dark ? "logo_dark" : "logo_light")
                                     .resizable()
                                     .scaledToFit()

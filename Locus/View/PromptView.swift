@@ -30,7 +30,6 @@ struct PromptView: View {
                 .interactive()
             )
             .clipShape(Circle())
-            //.padding(.horizontal, 27)
             .buttonStyle(.glass)
             .padding(.top)
             VStack{
@@ -38,20 +37,13 @@ struct PromptView: View {
                     Text("Today’s Prompt")
                         .bold()
                         .font(.title2)
-//                        .foregroundStyle(.white)
-//                        .padding(.bottom)
                         .font(.subheadline)
                         .padding(.bottom)
-                        //.multilineTextAlignment(.center)
-                        //.foregroundColor(.secondary)
                     
                     Text(todayPrompt)
-                        //.foregroundStyle(.white)
                         .lineLimit(3)
                         .padding(.bottom)
-                        //.font(.body)
-                    
-                    
+
                 }
                 .padding()
                 .frame(width: 350)
@@ -82,16 +74,7 @@ struct PromptView: View {
                         )
                         .cornerRadius(16)
                         .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
-//                        .frame(maxWidth: .infinity)
-//                        .padding()
                 }
-//                .glassEffect(
-//                    .clear
-//                        .tint(Color.gray.opacity(0.6))
-//                        .interactive()
-//                )
-//                .foregroundStyle(Color.white)
-//                .padding(.horizontal, 30)
                 .padding(.top, 10)
                 
                 Button {
@@ -114,26 +97,13 @@ struct PromptView: View {
                         )
                         .cornerRadius(16)
                         .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
-//                        .frame(maxWidth: .infinity)
-//                        .padding()
                 }
-//                .glassEffect(
-//                    .clear
-//                        .tint(Color.gray.opacity(0.6))
-//                        .interactive()
-//                )
-//                .foregroundStyle(Color.white)
-//                .padding(.horizontal, 30)
                 .padding(.top,5)
                 
                 Spacer()
             }
             .padding(.top, 20)
         }
-        
-        //.navigationDestination(isPresented: $moveToJournalPromptView) {
-           // JournalPromptView()
-        //}
         .navigationDestination(isPresented: $moveToJournalPromptView) {
             JournalPromptView(promptText: todayPrompt)
         }

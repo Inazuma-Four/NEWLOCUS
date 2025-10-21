@@ -61,17 +61,4 @@ class FileManagerHelper {
             // If no file exists, return an empty array.
             return []
         }
-    
-    // Deletes a journal entry for a specific date
-//    static func delete(for date: Date) {
-//        let url = fileURL(for: date)
-//        if FileManager.default.fileExists(atPath: url.path) {
-//            do {
-//                try FileManager.default.removeItem(at: url)
-//                print("🗑️ Entry deleted for \(date.formatted(date: .long, time: .omitted))")
-//            } catch {
-//                print("❌ Failed to delete entry: \(error.localizedDescription)")
-//            }
-//        }
-//    }
 }

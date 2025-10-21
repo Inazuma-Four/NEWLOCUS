@@ -21,18 +21,13 @@ struct JournalView: View {
     
     var onSaveComplete: () -> Void
     
-    
-    
-    // Map mood index to emoji image names or actual emoji
-    private let moodEmojis = ["😊", "😐", "😢", "😡"]
-    private let moodImages = ["Image 3", "Image 4", "Image 2", "Image 1"]
+    private let moodEmojis = ["😡", "😢", "😊", "😐"]
+    private let moodImages = ["Image 1", "Image 2", "Image 3", "Image 4", ]
     
     var body: some View {
         ZStack {
             ScrollView {
                 VStack(spacing: 20) {
-                    
-                    // Header
                     HStack {
                         Button(action: { dismiss() }) {
                             Image(systemName: "chevron.left")
@@ -157,12 +152,6 @@ struct JournalView: View {
     
     // MARK: - File Handling
     private func loadExistingEntry() {
-//        if let existingEntry = FileManagerHelper.load(from: date) {
-//            journalText = existingEntry.text
-//            if let moodIndex = moodEmojis.firstIndex(of: existingEntry.feelingEmoji) {
-//                selectedMood = moodIndex
-//            }
-//        }
         
         if let entry = entryToEdit {
             journalText = entry.text

@@ -132,13 +132,13 @@ struct OnboardingView: View {
                     GlassButton(text: "Get Started") {
                         withAnimation { pageIndex = 1 }
                     }
-                    .padding(.bottom, 40)
+                    .padding(.bottom, 10)
 
                 case 1:
                     GlassButton(text: "Continue") {
                         withAnimation { pageIndex = 2 }
                     }
-                    .padding(.bottom, 40)
+                    .padding(.bottom, 10)
 
                 case 2:
                     GlassButton(text: "Start Journey") {
@@ -146,7 +146,7 @@ struct OnboardingView: View {
                         //hasSeenOnboarding = false
                         moveToMainPageView = true
                     }
-                    .padding(.bottom, 40)
+                    .padding(.bottom, 10)
 
                 default:
                     MainPageView()

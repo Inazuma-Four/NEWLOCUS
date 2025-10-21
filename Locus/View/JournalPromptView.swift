@@ -8,17 +8,7 @@ struct JournalPromptView: View {
     @State private var journalText: String = ""
     @State private var selectedMood: Int? = nil
     
-    //var promptText: String
-    
     var body: some View {
-        
-        
-        //ZStack {
-//            Image("background")
-//                .resizable()
-//                .scaledToFill()
-//                .ignoresSafeArea()
-            
             VStack(spacing: 20) {
                 
                 HStack {
