@@ -4,6 +4,7 @@
 //
 //  Created by Gaetano Pascarella on 17/10/25.
 //
+
 import SwiftUI
 
 struct JournalView: View {
@@ -13,6 +14,18 @@ struct JournalView: View {
     
     @State private var journalText: String = ""
     @State private var selectedMood: Int? = nil
+    @State private var date: Date = Date()
+    @State private var selectedEmoji: String = "😊"
+    var entryToEdit: JournalEntry?
+    var feelingEmoji: String
+    
+    var onSaveComplete: () -> Void
+    
+    
+    
+    // Map mood index to emoji image names or actual emoji
+    private let moodEmojis = ["😊", "😐", "😢", "😡"]
+    private let moodImages = ["Image 3", "Image 4", "Image 2", "Image 1"]
     
     var body: some View {
         ZStack {
@@ -43,7 +56,7 @@ struct JournalView: View {
                         
                         Spacer()
                         
-                        Button(action: {/*action*/() }) {
+                        Button(action: { saveEntry() }) {
                             Image(systemName: "checkmark")
                                 .font(.title)
                                 .padding(3)
@@ -66,10 +79,9 @@ struct JournalView: View {
                     
                     // Mood selector
                     HStack(spacing: 16) {
-                        moodButton(index: 0, imageName: "Image 3")
-                        moodButton(index: 1, imageName: "Image 4")
-                        moodButton(index: 2, imageName: "Image 1")
-                        moodButton(index: 3, imageName: "Image 2")
+                        ForEach(0..<moodImages.count, id: \.self) { index in
+                            moodButton(index: index, imageName: moodImages[index])
+                        }
                     }
                     .padding(.horizontal)
                     
@@ -108,16 +120,22 @@ struct JournalView: View {
                 .padding(.bottom, 24)
             }
             .scrollDismissesKeyboard(.interactively)
+            .onAppear {
+                loadExistingEntry()
+            }
+            
         }
         .appBackground()
         .navigationBarBackButtonHidden(true)
     }
     
+    // MARK: - Mood Button
     @ViewBuilder
     private func moodButton(index: Int, imageName: String) -> some View {
         let isSelected = selectedMood == index
         Button {
             selectedMood = index
+            selectedEmoji = moodEmojis[index]
         } label: {
             Image(imageName)
                 .resizable()
@@ -136,8 +154,93 @@ struct JournalView: View {
         }
         .buttonStyle(.plain)
     }
+    
+    // MARK: - File Handling
+    private func loadExistingEntry() {
+//        if let existingEntry = FileManagerHelper.load(from: date) {
+//            journalText = existingEntry.text
+//            if let moodIndex = moodEmojis.firstIndex(of: existingEntry.feelingEmoji) {
+//                selectedMood = moodIndex
+//            }
+//        }
+        
+        if let entry = entryToEdit {
+            journalText = entry.text
+            selectedEmoji = entry.feelingEmoji
+            
+            if let moodIndex = moodEmojis.firstIndex(of: entry.feelingEmoji) {
+                selectedMood = moodIndex
+            }
+        } else {
+            selectedEmoji = feelingEmoji
+            if let moodIndex = moodEmojis.firstIndex(of: feelingEmoji) {
+                selectedMood = moodIndex
+            }
+        }
+    }
+    
+    // CHANGE: The save logic is now more advanced.
+        private func saveEntry() {
+            // 1. Load all existing entries for the given date.
+            var entries = FileManagerHelper.load(from: date)
+            
+            if let entryToEdit = entryToEdit {
+                // EDITING an existing entry
+                // Find the index of the entry we are editing.
+                if let index = entries.firstIndex(where: { $0.id == entryToEdit.id }) {
+                    if journalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                        // If text is cleared, remove the entry.
+                        entries.remove(at: index)
+                    } else {
+                        // Otherwise, update its properties.
+                        entries[index].text = journalText
+                        entries[index].feelingEmoji = selectedEmoji
+                        // Update the date to reflect the edit time
+                        entries[index].date = Date()
+                    }
+                }
+            } else {
+                // ADDING a new entry
+                // Don't save if the text is empty.
+                guard !journalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                    dismiss()
+                    return
+                }
+                // Use the current date and time for the new entry, but the day from the selectedDate
+                let newEntryDate = createDate(from: date)
+                let newEntry = JournalEntry(date: newEntryDate, feelingEmoji: selectedEmoji, text: journalText)
+                entries.append(newEntry)
+            }
+            
+            // 2. Save the entire (potentially modified) array back to the file.
+            FileManagerHelper.save(entries: entries, for: date)
+            onSaveComplete()
+            dismiss()
+        }
+    
+    private func createDate(from selectedDate: Date) -> Date {
+            let calendar = Calendar.current
+            let dateComponents = calendar.dateComponents([.year, .month, .day], from: selectedDate)
+            let timeComponents = calendar.dateComponents([.hour, .minute, .second], from: Date())
+            
+            var finalComponents = DateComponents()
+            finalComponents.year = dateComponents.year
+            finalComponents.month = dateComponents.month
+            finalComponents.day = dateComponents.day
+            finalComponents.hour = timeComponents.hour
+            finalComponents.minute = timeComponents.minute
+            finalComponents.second = timeComponents.second
+            
+            return calendar.date(from: finalComponents) ?? Date()
+        }
 }
 
 #Preview {
-    JournalView()
+    JournalView(
+        entryToEdit: nil,
+        feelingEmoji: "😊",
+        onSaveComplete: {
+            print("Preview save complete!")
+        }
+    )
 }

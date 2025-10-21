@@ -38,13 +38,18 @@ struct PromptView: View {
                     Text("Today’s Prompt")
                         .bold()
                         .font(.title2)
-                        .foregroundStyle(.white)
+//                        .foregroundStyle(.white)
+//                        .padding(.bottom)
+                        .font(.subheadline)
                         .padding(.bottom)
+                        //.multilineTextAlignment(.center)
+                        //.foregroundColor(.secondary)
                     
                     Text(todayPrompt)
-                        .foregroundStyle(.white)
+                        //.foregroundStyle(.white)
                         .lineLimit(3)
                         .padding(.bottom)
+                        //.font(.body)
                     
                     
                 }
@@ -135,7 +140,13 @@ struct PromptView: View {
 
         
         .navigationDestination(isPresented: $moveToJournalView) {
-            JournalView()
+            JournalView(
+                entryToEdit: nil,
+                feelingEmoji: "😊",
+                onSaveComplete : {
+                    dismiss()
+                }
+            )
         }
         .onAppear {
             let currentDate = getCurrentDateString()

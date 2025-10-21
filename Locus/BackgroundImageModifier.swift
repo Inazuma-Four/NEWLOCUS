@@ -14,15 +14,15 @@ struct BackgroundImageModifier: ViewModifier {
     @Environment(\.colorScheme) private var colorScheme
     
     func body(content: Content) -> some View {
-        content
-//            .background(
-//                Image("background")
-////                    .resizable()
-//                    .scaledToFit()
-//                    .ignoresSafeArea()
-//            )
         
-        Group {
+        //            .background(
+        //                Image("background")
+        ////                    .resizable()
+        //                    .scaledToFit()
+        //                    .ignoresSafeArea()
+        //            )
+        ZStack {
+            Group {
                 if colorScheme == .dark {
                     LinearGradient(
                         colors: [
@@ -44,6 +44,9 @@ struct BackgroundImageModifier: ViewModifier {
                 }
             }
             .ignoresSafeArea()
+            content
+        }
+        
     }
 }
 

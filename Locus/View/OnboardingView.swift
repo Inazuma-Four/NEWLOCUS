@@ -149,7 +149,7 @@ struct OnboardingView: View {
                     .padding(.bottom, 40)
 
                 default:
-                    HomeEmptyView()
+                    MainPageView()
                 }
             }
         }
