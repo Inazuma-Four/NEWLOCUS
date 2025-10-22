@@ -17,13 +17,14 @@ struct JournalPromptView: View {
     @State private var selectedMood: Int? = nil
     @State private var date: Date = Date()
     @State private var selectedEmoji: String = "😊"
+    @FocusState private var isTextEditorFocused: Bool
     
     // Mapping (harus sama dengan JournalView)
     private let moodEmojis = ["😡", "😢", "😊", "😐"]
     private let moodImages = ["Image 1", "Image 2", "Image 3", "Image 4"]
 
     var body: some View {
-        ScrollView {
+        ZStack {
             VStack(spacing: 20) {
                 
                 // Header
@@ -39,7 +40,7 @@ struct JournalPromptView: View {
                     .clipShape(Circle()).buttonStyle(.glass)
                     
                     Spacer()
-                    Text("Prompt Journal")
+                    Text("Your Journal")
                         .font(.system(size: 28, weight: .semibold))
                         .frame(maxWidth: .infinity, alignment: .center)
                         .padding(.top, 6)
@@ -67,7 +68,7 @@ struct JournalPromptView: View {
                 }
                 .padding(.horizontal)
 
-                Spacer(minLength: 10)
+                //Spacer(minLength: 10)
 
                 // Kotak Prompt
                 VStack(alignment: .leading, spacing: 8) {
@@ -100,10 +101,17 @@ struct JournalPromptView: View {
                                 .stroke(Color.white.opacity(0.5), lineWidth: 1)
                         )
                         .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
-                    TextEditor(text: $journalText) // Gunakan @State journalText
-                        .padding(12).scrollContentBackground(.hidden)
-                        .foregroundColor(.primary).font(.body)
-                        .frame(minHeight: 350)
+                    VStack(alignment: .leading, spacing: 0) {
+                        TextEditor(text: $journalText) // Gunakan @State journalText
+                            
+                            .textEditorStyle(.plain)
+                            .scrollContentBackground(.hidden)
+                            .foregroundColor(.primary).font(.body)
+                            .frame(maxWidth: .infinity)
+                            .focused($isTextEditorFocused)
+                    }
+                    .padding(.horizontal, 18) // Padding konsisten
+                    .padding(.vertical, 16)
 
                     if journalText.isEmpty {
                         Text("Write your thoughts...")
@@ -112,19 +120,20 @@ struct JournalPromptView: View {
                             .font(.body).allowsHitTesting(false)
                     }
                 }
-                .padding(.horizontal).padding(.top, 20)
-                Spacer()
+                .padding(.horizontal)
+                //.padding(.top, 20)
             }
             .padding(.bottom)
+            .onAppear {
+                // 2. FUNGSI BARU UNTUK MEMUAT DATA
+                loadExistingEntry()
+            }
         }
         .appBackground()
         .navigationBarBackButtonHidden(true)
-        .onAppear {
-            // 2. FUNGSI BARU UNTUK MEMUAT DATA
-            loadExistingEntry()
-        }
+        
         .onTapGesture {
-            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+            isTextEditorFocused = false
         }
     }
 

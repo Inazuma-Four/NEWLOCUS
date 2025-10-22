@@ -20,107 +20,108 @@ struct JournalView: View {
     var feelingEmoji: String
     
     var onSaveComplete: () -> Void
+    @FocusState private var isTextEditorFocused: Bool
     
     private let moodEmojis = ["😡", "😢", "😊", "😐"]
     private let moodImages = ["Image 1", "Image 2", "Image 3", "Image 4", ]
     
     var body: some View {
         ZStack {
-            ScrollView {
-                VStack(spacing: 20) {
-                    HStack {
-                        Button(action: { dismiss() }) {
-                            Image(systemName: "chevron.left")
-                                .font(.title)
-                                .padding(3)
-                                .foregroundStyle(.white)
-                        }
-                        .glassEffect(.clear
-                            .tint(Color.primary.opacity(9))
-                            .interactive()
-                        )
-                        .clipShape(Circle())
-                        .buttonStyle(.glass)
-                        
-                        Spacer()
-                        
-                        Text("Your Journal")
-                            .font(.system(size: 28, weight: .semibold))
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .padding(.top, 6)
-                        
-                        Spacer()
-                        
-                        Button(action: { saveEntry() }) {
-                            Image(systemName: "checkmark")
-                                .font(.title)
-                                .padding(3)
-                                .foregroundStyle(.white)
-                        }
-                        .glassEffect(.clear
-                            .tint(Color.primary.opacity(9))
-                            .interactive()
-                        )
-                        .clipShape(Circle())
-                        .buttonStyle(.glass)
+            //            ScrollView {
+            VStack(spacing: 20) {
+                HStack {
+                    Button(action: { dismiss() }) {
+                        Image(systemName: "chevron.left")
+                            .font(.title)
+                            .padding(3)
+                            .foregroundStyle(.white)
                     }
-                    .padding(.horizontal)
-                    .padding(.top, 5)
+                    .glassEffect(.clear
+                        .tint(Color.primary.opacity(9))
+                        .interactive()
+                    )
+                    .clipShape(Circle())
+                    .buttonStyle(.glass)
                     
-                    Text("How was your day?")
-                        .font(.headline)
-                        .foregroundColor(.primary)
-                        .padding(.top, 10)
+                    Spacer()
                     
-                    // Mood selector
-                    HStack(spacing: 16) {
-                        ForEach(0..<moodImages.count, id: \.self) { index in
-                            moodButton(index: index, imageName: moodImages[index])
-                        }
+                    Text("Your Journal")
+                        .font(.system(size: 28, weight: .semibold))
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.top, 6)
+                    
+                    Spacer()
+                    
+                    Button(action: { saveEntry() }) {
+                        Image(systemName: "checkmark")
+                            .font(.title)
+                            .padding(3)
+                            .foregroundStyle(.white)
                     }
-                    .padding(.horizontal)
-                    
-                    // Journal text area
-                    ZStack(alignment: .topLeading) {
-                        RoundedRectangle(cornerRadius: 20, style: .continuous)
-                            .fill(colorScheme == .dark ? Color.white.opacity(0.65)
-                                  : Color.black.opacity(0.3))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 20, style: .continuous)
-                                    .stroke(Color.white.opacity(0.5), lineWidth: 1)
-                            )
-                            .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
-                        
-                        VStack(alignment: .leading, spacing: 0) {
-                            TextEditor(text: $journalText)
-                                .textEditorStyle(.plain)
-                                .scrollContentBackground(.hidden)
-                                .foregroundColor(.primary)
-                                .font(.body)
-                                .background(Color.clear)
-                                .frame(maxWidth: .infinity, minHeight: 300)
-                        }
-                        .padding(.horizontal, 18)
-                        .padding(.vertical, 16)
-                        
-                        if journalText.isEmpty {
-                            Text("Write your thoughts here...")
-                                .foregroundColor(.white.opacity(0.7))
-                                .font(.body)
-                                .padding(.horizontal, 24)
-                                .padding(.vertical, 24)
-                        }
-                    }
-                    .frame(maxWidth: .infinity, minHeight: 500)
-                    .padding(.horizontal)
-                    .padding(.top, 2)
-                    
-                    Spacer(minLength: 20)
+                    .glassEffect(.clear
+                        .tint(Color.primary.opacity(9))
+                        .interactive()
+                    )
+                    .clipShape(Circle())
+                    .buttonStyle(.glass)
                 }
-                .padding(.top)
-                .padding(.bottom, 24)
+                .padding(.horizontal)
+                .padding(.top, 5)
+                
+                Text("How was your day?")
+                    .font(.headline)
+                    .foregroundColor(.primary)
+                    .padding(.top, 10)
+                
+                // Mood selector
+                HStack(spacing: 16) {
+                    ForEach(0..<moodImages.count, id: \.self) { index in
+                        moodButton(index: index, imageName: moodImages[index])
+                    }
+                }
+                .padding(.horizontal)
+                
+                // Journal text area
+                ZStack(alignment: .topLeading) {
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .fill(colorScheme == .dark ? Color.white.opacity(0.65)
+                              : Color.black.opacity(0.3))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                .stroke(Color.white.opacity(0.5), lineWidth: 1)
+                        )
+                        .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
+                    
+                    VStack(alignment: .leading, spacing: 0) {
+                        TextEditor(text: $journalText)
+                            .textEditorStyle(.plain)
+                            .scrollContentBackground(.hidden)
+                            .foregroundColor(.primary)
+                            .font(.body)
+                            .background(Color.clear)
+                            .frame(maxWidth: .infinity)
+                            .focused($isTextEditorFocused)
+                    }
+                    .padding(.horizontal, 18)
+                    .padding(.vertical, 16)
+                    
+                    if journalText.isEmpty {
+                        Text("Write your thoughts here...")
+                            .foregroundColor(.white.opacity(0.7))
+                            .font(.body)
+                            .padding(.horizontal, 24)
+                            .padding(.vertical, 24)
+                    }
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal)
+                .padding(.top, 2)
+                
+                Spacer(minLength: 20)
             }
-            .scrollDismissesKeyboard(.interactively)
+            .padding(.top)
+            .padding(.bottom, 24)
+            
             .onAppear {
                 loadExistingEntry()
             }
@@ -128,6 +129,10 @@ struct JournalView: View {
         }
         .appBackground()
         .navigationBarBackButtonHidden(true)
+        .scrollDismissesKeyboard(.interactively)
+        .onTapGesture {
+            isTextEditorFocused = false // Ini akan menutup keyboard
+        }
     }
     
     // MARK: - Mood Button
@@ -149,7 +154,7 @@ struct JournalView: View {
                               : Color.black.opacity(0.6))
                         .blur(radius: 4)
                 )
-                //.clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            //.clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                 .overlay(
                     RoundedRectangle(cornerRadius: 14, style: .continuous)
                         .stroke(isSelected ? Color.black.opacity(0.3) : Color.white.opacity(0.3), lineWidth: isSelected ? 2 : 1)
