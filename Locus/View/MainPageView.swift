@@ -119,7 +119,7 @@ struct MainPageView: View {
                                     .clipShape(RoundedRectangle(cornerRadius: 10))
                                 
                                 VStack(alignment: .leading, spacing: 5) {
-                                    Text(entry.text)
+                                    Text(getDisplayText(for: entry))
                                         .font(.body)
                                         .lineLimit(3)
                                         .foregroundColor(.primary)
@@ -172,6 +172,33 @@ struct MainPageView: View {
     
     private func loadEntries(for date: Date) {
         entriesForSelectedDate = FileManagerHelper.load(from: date)
+    }
+    
+    private func getDisplayText(for entry: JournalEntry) -> String {
+        // Cek apakah ini entri dari prompt
+        if entry.text.hasPrefix("Prompt: ") {
+            // Formatnya adalah "Prompt: [teks prompt]\n\n[jawaban]"
+            // Kita pecah stringnya menggunakan "\n\n"
+            let components = entry.text.components(separatedBy: "\n\n")
+            
+            // Jika pemecahan berhasil (ada 2 bagian atau lebih)
+            if components.count >= 2 {
+                // Ambil semua bagian setelah bagian pertama (ini adalah jawabannya)
+                let answer = components.dropFirst().joined(separator: "\n\n")
+                
+                // Jika jawabannya tidak kosong, tampilkan
+                if !answer.isEmpty {
+                    return "Prompt: \(answer)" // Hasil: "Prompt: [jawaban...]"
+                } else {
+                    // Jika seseorang hanya menyimpan prompt tanpa jawaban
+                    return components[0] // Hasil: "Prompt: [teks prompt]"
+                }
+            }
+        }
+        
+        // Jika bukan entri prompt, atau formatnya aneh,
+        // tampilkan saja teks aslinya.
+        return entry.text
     }
     
     private func getImageName(for emoji: String) -> String {

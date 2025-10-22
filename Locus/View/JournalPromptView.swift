@@ -32,7 +32,10 @@ struct JournalPromptView: View {
                         Image(systemName: "chevron.left")
                             .font(.title).padding(3).foregroundStyle(.white)
                     }
-                    .glassEffect(.clear.tint(Color.gray.opacity(0.8)).interactive())
+                    .glassEffect(.clear
+                        .tint(Color.primary.opacity(9))
+                        .interactive()
+                    )
                     .clipShape(Circle()).buttonStyle(.glass)
                     
                     Spacer()
@@ -41,11 +44,14 @@ struct JournalPromptView: View {
                         .frame(maxWidth: .infinity, alignment: .center)
                         .padding(.top, 6)
                     Spacer()
-                    Button(action: { saveEntry() }) { // Aksi sudah benar
+                    Button(action: { saveEntry() }) {
                         Image(systemName: "checkmark")
                             .font(.title).padding(3).foregroundStyle(.white)
                     }
-                    .glassEffect(.clear.tint(Color.gray.opacity(0.8)).interactive())
+                    .glassEffect(.clear
+                        .tint(Color.primary.opacity(9))
+                        .interactive()
+                    )
                     .clipShape(Circle()).buttonStyle(.glass)
                 }
                 .padding(.horizontal).padding(.top, 5)
@@ -87,8 +93,13 @@ struct JournalPromptView: View {
                 // Text Editor
                 ZStack(alignment: .topLeading) {
                     RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .fill(Color.gray.opacity(0.70))
-
+                        .fill(colorScheme == .dark ? Color.white.opacity(0.65)
+                              : Color.black.opacity(0.3))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                .stroke(Color.white.opacity(0.5), lineWidth: 1)
+                        )
+                        .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
                     TextEditor(text: $journalText) // Gunakan @State journalText
                         .padding(12).scrollContentBackground(.hidden)
                         .foregroundColor(.primary).font(.body)
@@ -126,14 +137,21 @@ struct JournalPromptView: View {
             selectedEmoji = moodEmojis[index]
         } label: {
             Image(imageName)
-                .resizable().scaledToFit().frame(width: 56, height: 56)
-                .padding(8).background(.ultraThinMaterial)
-                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                .resizable()
+                .scaledToFit()
+                .frame(width: 56, height: 56)
+                .padding(8)
+                .background(
+                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                        .fill(colorScheme == .dark ? Color.white.opacity(0.6)
+                              : Color.black.opacity(0.6))
+                        .blur(radius: 4)
+                )
                 .overlay(
                     RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .stroke(isSelected ? Color.blue.opacity(0.9) : Color.white.opacity(0.25), lineWidth: isSelected ? 2 : 1)
+                        .stroke(isSelected ? Color.black.opacity(0.3) : Color.white.opacity(0.3), lineWidth: isSelected ? 2 : 1)
                 )
-                .shadow(color: isSelected ? Color.blue.opacity(0.25) : Color.black.opacity(0.1), radius: isSelected ? 8 : 4, x: 0, y: 2)
+                .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
                 .scaleEffect(isSelected ? 1.06 : 1.0)
                 .animation(.spring(response: 0.25, dampingFraction: 0.8), value: isSelected)
         }

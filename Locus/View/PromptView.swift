@@ -26,7 +26,7 @@ struct PromptView: View {
                     .foregroundStyle(.white)
             }
             .glassEffect(.clear
-                .tint(Color.gray.opacity(0.8))
+                .tint(Color.secondary.opacity(2))
                 .interactive()
             )
             .clipShape(Circle())
@@ -37,10 +37,11 @@ struct PromptView: View {
                     Text("Today’s Prompt")
                         .bold()
                         .font(.title2)
-                        .font(.subheadline)
+                        .foregroundStyle(.white)
                         .padding(.bottom)
                     
                     Text(todayPrompt)
+                        .foregroundStyle(.white)
                         .lineLimit(3)
                         .padding(.bottom)
 
@@ -49,7 +50,7 @@ struct PromptView: View {
                 .frame(width: 350)
                 .glassEffect(
                     .clear
-                        .tint(Color.gray.opacity(0.6))
+                        .tint(Color.gray.opacity(0.65))
                         .interactive(),
                     in: RoundedRectangle(cornerRadius: 10)
                 )
@@ -59,7 +60,7 @@ struct PromptView: View {
                 } label: {
                     Text("Reflect on this prompt")
                         .font(.headline)
-                        .foregroundColor(colorScheme == .dark ? .black : .white) // <- cambia qui
+                        .foregroundColor(.white) // <- cambia qui
                         .frame(width: 350, height: 48)
                         .background(
                             ZStack {
@@ -82,12 +83,12 @@ struct PromptView: View {
                 } label: {
                     Text("Write on your own")
                         .font(.headline)
-                        .foregroundColor(colorScheme == .dark ? .black : .white) // <- cambia qui
+                        .foregroundColor(.white) // <- cambia qui
                         .frame(width: 350, height: 48)
                         .background(
                             ZStack {
                                 RoundedRectangle(cornerRadius: 16)
-                                    .fill(colorScheme == .dark ? Color.white.opacity(0.6) : Color.black.opacity(0.6))
+                                    .fill(colorScheme == .dark ? Color.white.opacity(0.4) : Color.black.opacity(0.6))
                                     .blur(radius: 7)
                             }
                             )
