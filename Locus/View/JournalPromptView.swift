@@ -96,7 +96,7 @@ struct JournalPromptView: View {
                             
                             .textEditorStyle(.plain)
                             .scrollContentBackground(.hidden)
-                            .foregroundColor(.primary).font(.body)
+                            .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .focused($isTextEditorFocused)
                     }
@@ -104,7 +104,7 @@ struct JournalPromptView: View {
                     .padding(.vertical, 16)
 
                     if journalText.isEmpty {
-                        Text("Write your thoughts...")
+                        Text("Write your thoughts here...")
                             .foregroundColor(.white.opacity(0.7))
                             .padding(.horizontal, 20).padding(.vertical, 20)
                             .font(.body).allowsHitTesting(false)
@@ -145,7 +145,7 @@ struct JournalPromptView: View {
                 )
                 .overlay(
                     RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .stroke(isSelected ? Color.black.opacity(0.3) : Color.white.opacity(0.3), lineWidth: isSelected ? 2 : 1)
+                        .stroke(isSelected ? Color.black.opacity(1) : Color.white.opacity(1), lineWidth: isSelected ? 2 : 1)
                 )
                 .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
                 .scaleEffect(isSelected ? 1.06 : 1.0)

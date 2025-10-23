@@ -93,8 +93,7 @@ struct JournalView: View {
                         TextEditor(text: $journalText)
                             .textEditorStyle(.plain)
                             .scrollContentBackground(.hidden)
-                            .foregroundColor(.primary)
-                            .font(.body)
+                            .foregroundColor(.white)
                             .background(Color.clear)
                             .frame(maxWidth: .infinity)
                             .focused($isTextEditorFocused)
@@ -152,7 +151,7 @@ struct JournalView: View {
                 )
                 .overlay(
                     RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .stroke(isSelected ? Color.black.opacity(0.3) : Color.white.opacity(0.3), lineWidth: isSelected ? 2 : 1)
+                        .stroke(isSelected ? Color.black.opacity(1) : Color.white.opacity(1), lineWidth: isSelected ? 2 : 1)
                 )
                 .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
                 .scaleEffect(isSelected ? 1.06 : 1.0)

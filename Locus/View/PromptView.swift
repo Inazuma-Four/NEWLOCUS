@@ -50,8 +50,7 @@ struct PromptView: View {
                 .frame(width: 350)
                 .glassEffect(
                     .clear
-                        .tint(Color.gray.opacity(0.65))
-                        .interactive(),
+                        .tint(Color.gray.opacity(0.65)),
                     in: RoundedRectangle(cornerRadius: 10)
                 )
                 
@@ -88,7 +87,7 @@ struct PromptView: View {
                         .background(
                             ZStack {
                                 RoundedRectangle(cornerRadius: 16)
-                                    .fill(colorScheme == .dark ? Color.white.opacity(0.4) : Color.black.opacity(0.6))
+                                    .fill(colorScheme == .dark ? Color.white.opacity(0.6) : Color.black.opacity(0.6))
                                     .blur(radius: 7)
                             }
                             )

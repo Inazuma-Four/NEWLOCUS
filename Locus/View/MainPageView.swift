@@ -131,8 +131,11 @@ struct MainPageView: View {
                                 Spacer()
                             }
                             .padding()
-                            .background(Material.thin)
-                            .cornerRadius(15)
+                            .glassEffect(
+                                .clear
+                                    .tint(Color.gray.opacity(0.6)),
+                                in: RoundedRectangle(cornerRadius: 15)
+                            )
                             .shadow(radius: 3, x: 0, y: 2)
                         }
                     }
@@ -157,13 +160,10 @@ struct MainPageView: View {
                     .foregroundColor(.secondary)
             }
             .padding(25)
-//            .padding(.bottom)
-//            .padding(.top)
             .frame(width: 350)
             .glassEffect(
                 .clear
                     .tint(Color.gray.opacity(0.6)),
-                    //.interactive(),
                 in: RoundedRectangle(cornerRadius: 10)
             )
         }
