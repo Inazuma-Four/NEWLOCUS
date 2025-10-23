@@ -191,7 +191,7 @@ struct JournalPromptView: View {
             }
         } else {
             guard !journalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-                dismiss()
+                onSaveComplete()
                 return
             }
             let newEntryDate = createDate(from: date)
@@ -200,7 +200,6 @@ struct JournalPromptView: View {
         }
         FileManagerHelper.save(entries: entries, for: date)
         onSaveComplete()
-        dismiss()
     }
     
     private func createDate(from selectedDate: Date) -> Date {

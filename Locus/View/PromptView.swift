@@ -12,6 +12,8 @@ struct PromptView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) private var colorScheme
     
+    var onComplete: () -> Void
+    
     @State var moveToJournalPromptView = false
     @State var moveToJournalView = false
     @State var todayPrompt: String = ""
@@ -108,7 +110,7 @@ struct PromptView: View {
             JournalPromptView(
                 newPromptText: todayPrompt,
                 onSaveComplete: {
-                    dismiss()
+                    onComplete()
                 }
             )
         }
@@ -117,7 +119,7 @@ struct PromptView: View {
                 entryToEdit: nil,
                 feelingEmoji: "😊",
                 onSaveComplete : {
-                    dismiss()
+                    onComplete()
                 }
             )
         }
@@ -156,5 +158,5 @@ struct PromptView: View {
 }
 
 #Preview {
-    PromptView()
+    PromptView(onComplete: { print("Preview complete") })
 }

@@ -91,7 +91,9 @@ struct MainPageView: View {
             }
         }
         .navigationDestination(isPresented: $promptView, destination: {
-            PromptView()
+            PromptView(onComplete: {
+                promptView = false
+            })
         })
         .padding()
     }
