@@ -21,8 +21,7 @@ struct LocusApp: App {
             }else {
                 NavigationStack {
                     if hasSeenOnboarding {
-                        HomeEmptyView()
-                        //MainPageView()
+                        MainPageView()
                     } else {
                         OnboardingView(hasSeenOnboarding: $hasSeenOnboarding)
                     }

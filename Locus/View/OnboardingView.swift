@@ -15,7 +15,7 @@ struct GlassButton: View {
         Button(action: action) {
             Text(text)
                 .font(.headline)
-                .foregroundColor(colorScheme == .dark ? .black : .white) // <- cambia qui
+                .foregroundColor(colorScheme == .dark ? .black : .white)
                 .frame(width: 318, height: 48)
                 .background(
                     ZStack {
@@ -55,8 +55,8 @@ struct OnboardingView: View {
                     } else {
                         LinearGradient(
                             colors: [
-                                Color.white,                        // in alto, bianco puro
-                                Color(red: 0.7, green: 0.7, blue: 0.75) // in basso, grigio chiarissimo
+                                Color.white,
+                                Color(red: 0.7, green: 0.7, blue: 0.75)
                             ],
                             startPoint: .top,
                             endPoint: .bottom
@@ -68,8 +68,6 @@ struct OnboardingView: View {
             
             VStack {
                 Spacer()
-
-                // Contenuto pagina
                 Group {
                     switch pageIndex {
                     case 0:
@@ -126,30 +124,28 @@ struct OnboardingView: View {
 
                 Spacer()
 
-                // Bottone in basso
                 switch pageIndex {
                 case 0:
                     GlassButton(text: "Get Started") {
                         withAnimation { pageIndex = 1 }
                     }
-                    .padding(.bottom, 40)
+                    .padding(.bottom, 10)
 
                 case 1:
                     GlassButton(text: "Continue") {
                         withAnimation { pageIndex = 2 }
                     }
-                    .padding(.bottom, 40)
+                    .padding(.bottom, 10)
 
                 case 2:
                     GlassButton(text: "Start Journey") {
                         hasSeenOnboarding = true
-                        //hasSeenOnboarding = false
                         moveToMainPageView = true
                     }
-                    .padding(.bottom, 40)
+                    .padding(.bottom, 10)
 
                 default:
-                    HomeEmptyView()
+                    MainPageView()
                 }
             }
         }
@@ -163,5 +159,5 @@ struct OnboardingView: View {
 
 #Preview {
     OnboardingView(hasSeenOnboarding: .constant(false))
-        .preferredColorScheme(.dark) // forza Dark Mode
+        .preferredColorScheme(.dark)
 }

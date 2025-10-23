@@ -32,9 +32,15 @@ class NotificationManager {
             content.sound = .default
             
             var dateComponents = DateComponents()
-            dateComponents.hour = 12
-            dateComponents.minute = 44
-            dateComponents.weekday = dayIndex + 0
+            dateComponents.hour = 20
+            
+            let calendarWeekday: Int
+            if dayIndex == 6 {
+                calendarWeekday = 1
+            } else {
+                calendarWeekday = dayIndex + 2
+            }
+            dateComponents.weekday = calendarWeekday
             
             let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
             
@@ -48,7 +54,7 @@ class NotificationManager {
                 if let error = error {
                     print("Error adding notification for day \(dayIndex): \(error.localizedDescription)")
                 } else {
-                    print("✅ Notification scheduled for day index \(dayIndex) at 8 PM")
+                    print("✅ Notification scheduled for weekday \(calendarWeekday) (Index \(dayIndex)) at 8 PM")
                 }
             }
         }

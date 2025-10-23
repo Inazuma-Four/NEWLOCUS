@@ -12,6 +12,8 @@ struct PromptView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) private var colorScheme
     
+    var onComplete: () -> Void
+    
     @State var moveToJournalPromptView = false
     @State var moveToJournalView = false
     @State var todayPrompt: String = ""
@@ -26,11 +28,10 @@ struct PromptView: View {
                     .foregroundStyle(.white)
             }
             .glassEffect(.clear
-                .tint(Color.gray.opacity(0.8))
+                .tint(Color.secondary.opacity(2))
                 .interactive()
             )
             .clipShape(Circle())
-            //.padding(.horizontal, 27)
             .buttonStyle(.glass)
             .padding(.top)
             VStack{
@@ -45,15 +46,13 @@ struct PromptView: View {
                         .foregroundStyle(.white)
                         .lineLimit(3)
                         .padding(.bottom)
-                    
-                    
+
                 }
                 .padding()
                 .frame(width: 350)
                 .glassEffect(
                     .clear
-                        .tint(Color.gray.opacity(0.6))
-                        .interactive(),
+                        .tint(Color.gray.opacity(0.65)),
                     in: RoundedRectangle(cornerRadius: 10)
                 )
                 
@@ -62,7 +61,7 @@ struct PromptView: View {
                 } label: {
                     Text("Reflect on this prompt")
                         .font(.headline)
-                        .foregroundColor(colorScheme == .dark ? .black : .white) // <- cambia qui
+                        .foregroundColor(.white)
                         .frame(width: 350, height: 48)
                         .background(
                             ZStack {
@@ -77,16 +76,7 @@ struct PromptView: View {
                         )
                         .cornerRadius(16)
                         .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
-//                        .frame(maxWidth: .infinity)
-//                        .padding()
                 }
-//                .glassEffect(
-//                    .clear
-//                        .tint(Color.gray.opacity(0.6))
-//                        .interactive()
-//                )
-//                .foregroundStyle(Color.white)
-//                .padding(.horizontal, 30)
                 .padding(.top, 10)
                 
                 Button {
@@ -94,7 +84,7 @@ struct PromptView: View {
                 } label: {
                     Text("Write on your own")
                         .font(.headline)
-                        .foregroundColor(colorScheme == .dark ? .black : .white) // <- cambia qui
+                        .foregroundColor(.white)
                         .frame(width: 350, height: 48)
                         .background(
                             ZStack {
@@ -109,33 +99,29 @@ struct PromptView: View {
                         )
                         .cornerRadius(16)
                         .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
-//                        .frame(maxWidth: .infinity)
-//                        .padding()
                 }
-//                .glassEffect(
-//                    .clear
-//                        .tint(Color.gray.opacity(0.6))
-//                        .interactive()
-//                )
-//                .foregroundStyle(Color.white)
-//                .padding(.horizontal, 30)
                 .padding(.top,5)
                 
                 Spacer()
             }
             .padding(.top, 20)
         }
-        
-        //.navigationDestination(isPresented: $moveToJournalPromptView) {
-           // JournalPromptView()
-        //}
         .navigationDestination(isPresented: $moveToJournalPromptView) {
-            JournalPromptView(promptText: todayPrompt)
+            JournalPromptView(
+                newPromptText: todayPrompt,
+                onSaveComplete: {
+                    onComplete()
+                }
+            )
         }
-
-        
         .navigationDestination(isPresented: $moveToJournalView) {
-            JournalView()
+            JournalView(
+                entryToEdit: nil,
+                feelingEmoji: "😊",
+                onSaveComplete : {
+                    onComplete()
+                }
+            )
         }
         .onAppear {
             let currentDate = getCurrentDateString()
@@ -171,8 +157,6 @@ struct PromptView: View {
     
 }
 
-
-
 #Preview {
-    PromptView()
+    PromptView(onComplete: { print("Preview complete") })
 }
