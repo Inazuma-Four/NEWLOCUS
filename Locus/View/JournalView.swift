@@ -1,6 +1,6 @@
 //
-//  JournalUIView.swift
-//  JournalApp
+//  JournalView.swift
+//  Locus
 //
 //  Created by Gaetano Pascarella on 17/10/25.
 //
@@ -27,7 +27,6 @@ struct JournalView: View {
     
     var body: some View {
         ZStack {
-            //            ScrollView {
             VStack(spacing: 20) {
                 HStack {
                     Button(action: { dismiss() }) {
@@ -73,7 +72,6 @@ struct JournalView: View {
                     .foregroundColor(.primary)
                     .padding(.top, 10)
                 
-                // Mood selector
                 HStack(spacing: 16) {
                     ForEach(0..<moodImages.count, id: \.self) { index in
                         moodButton(index: index, imageName: moodImages[index])
@@ -81,7 +79,6 @@ struct JournalView: View {
                 }
                 .padding(.horizontal)
                 
-                // Journal text area
                 ZStack(alignment: .topLeading) {
                     RoundedRectangle(cornerRadius: 20, style: .continuous)
                         .fill(colorScheme == .dark ? Color.white.opacity(0.65)
@@ -131,11 +128,10 @@ struct JournalView: View {
         .navigationBarBackButtonHidden(true)
         .scrollDismissesKeyboard(.interactively)
         .onTapGesture {
-            isTextEditorFocused = false // Ini akan menutup keyboard
+            isTextEditorFocused = false
         }
     }
     
-    // MARK: - Mood Button
     @ViewBuilder
     private func moodButton(index: Int, imageName: String) -> some View {
         let isSelected = selectedMood == index
@@ -154,7 +150,6 @@ struct JournalView: View {
                               : Color.black.opacity(0.6))
                         .blur(radius: 4)
                 )
-            //.clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                 .overlay(
                     RoundedRectangle(cornerRadius: 14, style: .continuous)
                         .stroke(isSelected ? Color.black.opacity(0.3) : Color.white.opacity(0.3), lineWidth: isSelected ? 2 : 1)
@@ -166,7 +161,6 @@ struct JournalView: View {
         .buttonStyle(.plain)
     }
     
-    // MARK: - File Handling
     private func loadExistingEntry() {
         
         if let entry = entryToEdit {
@@ -184,40 +178,28 @@ struct JournalView: View {
         }
     }
     
-    // CHANGE: The save logic is now more advanced.
     private func saveEntry() {
-        // 1. Load all existing entries for the given date.
         var entries = FileManagerHelper.load(from: date)
         
         if let entryToEdit = entryToEdit {
-            // EDITING an existing entry
-            // Find the index of the entry we are editing.
             if let index = entries.firstIndex(where: { $0.id == entryToEdit.id }) {
                 if journalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                    // If text is cleared, remove the entry.
                     entries.remove(at: index)
                 } else {
-                    // Otherwise, update its properties.
                     entries[index].text = journalText
                     entries[index].feelingEmoji = selectedEmoji
-                    // Update the date to reflect the edit time
                     entries[index].date = Date()
                 }
             }
         } else {
-            // ADDING a new entry
-            // Don't save if the text is empty.
             guard !journalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
                 dismiss()
                 return
             }
-            // Use the current date and time for the new entry, but the day from the selectedDate
             let newEntryDate = createDate(from: date)
             let newEntry = JournalEntry(date: newEntryDate, feelingEmoji: selectedEmoji, text: journalText)
             entries.append(newEntry)
         }
-        
-        // 2. Save the entire (potentially modified) array back to the file.
         FileManagerHelper.save(entries: entries, for: date)
         onSaveComplete()
         dismiss()

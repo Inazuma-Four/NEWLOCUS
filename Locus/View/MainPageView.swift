@@ -1,6 +1,6 @@
 //
-//  ContentView.swift
-//  ActivityTesting1
+//  MainPageView.swift
+//  Locus
 //
 //  Created by Mohsin Amir Siddiqui on 21/10/25.
 //
@@ -115,7 +115,6 @@ struct MainPageView: View {
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 45, height: 45)
-                                    //.background(.ultraThinMaterial)
                                     .clipShape(RoundedRectangle(cornerRadius: 10))
                                 
                                 VStack(alignment: .leading, spacing: 5) {
@@ -156,15 +155,15 @@ struct MainPageView: View {
                     .font(.subheadline)
                     .multilineTextAlignment(.center)
                     .foregroundColor(.secondary)
-                
-                
             }
-            .padding()
+            .padding(25)
+//            .padding(.bottom)
+//            .padding(.top)
             .frame(width: 350)
             .glassEffect(
                 .clear
-                    .tint(Color.gray.opacity(0.6))
-                    .interactive(),
+                    .tint(Color.gray.opacity(0.6)),
+                    //.interactive(),
                 in: RoundedRectangle(cornerRadius: 10)
             )
         }
@@ -175,29 +174,17 @@ struct MainPageView: View {
     }
     
     private func getDisplayText(for entry: JournalEntry) -> String {
-        // Cek apakah ini entri dari prompt
         if entry.text.hasPrefix("Prompt: ") {
-            // Formatnya adalah "Prompt: [teks prompt]\n\n[jawaban]"
-            // Kita pecah stringnya menggunakan "\n\n"
             let components = entry.text.components(separatedBy: "\n\n")
-            
-            // Jika pemecahan berhasil (ada 2 bagian atau lebih)
             if components.count >= 2 {
-                // Ambil semua bagian setelah bagian pertama (ini adalah jawabannya)
                 let answer = components.dropFirst().joined(separator: "\n\n")
-                
-                // Jika jawabannya tidak kosong, tampilkan
                 if !answer.isEmpty {
-                    return "Prompt: \(answer)" // Hasil: "Prompt: [jawaban...]"
+                    return "Prompt: \(answer)"
                 } else {
-                    // Jika seseorang hanya menyimpan prompt tanpa jawaban
-                    return components[0] // Hasil: "Prompt: [teks prompt]"
+                    return components[0]
                 }
             }
         }
-        
-        // Jika bukan entri prompt, atau formatnya aneh,
-        // tampilkan saja teks aslinya.
         return entry.text
     }
     

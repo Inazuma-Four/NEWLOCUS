@@ -60,7 +60,7 @@ struct PromptView: View {
                 } label: {
                     Text("Reflect on this prompt")
                         .font(.headline)
-                        .foregroundColor(.white) // <- cambia qui
+                        .foregroundColor(.white)
                         .frame(width: 350, height: 48)
                         .background(
                             ZStack {
@@ -83,7 +83,7 @@ struct PromptView: View {
                 } label: {
                     Text("Write on your own")
                         .font(.headline)
-                        .foregroundColor(.white) // <- cambia qui
+                        .foregroundColor(.white)
                         .frame(width: 350, height: 48)
                         .background(
                             ZStack {
@@ -107,14 +107,12 @@ struct PromptView: View {
         }
         .navigationDestination(isPresented: $moveToJournalPromptView) {
             JournalPromptView(
-                newPromptText: todayPrompt, // <-- INI BARU
+                newPromptText: todayPrompt,
                 onSaveComplete: {
                     dismiss()
                 }
             )
         }
-
-        
         .navigationDestination(isPresented: $moveToJournalView) {
             JournalView(
                 entryToEdit: nil,
@@ -157,8 +155,6 @@ struct PromptView: View {
     }
     
 }
-
-
 
 #Preview {
     PromptView()

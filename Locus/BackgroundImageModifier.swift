@@ -28,8 +28,8 @@ struct BackgroundImageModifier: ViewModifier {
                 } else {
                     LinearGradient(
                         colors: [
-                            Color.white,                        // in alto, bianco puro
-                            Color(red: 0.7, green: 0.7, blue: 0.75) // in basso, grigio chiarissimo
+                            Color.white,
+                            Color(red: 0.7, green: 0.7, blue: 0.75)
                         ],
                         startPoint: .top,
                         endPoint: .bottom

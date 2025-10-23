@@ -1,33 +1,29 @@
 import SwiftUI
 
-// GANTI SELURUH FILE ANDA DENGAN INI
+
 struct JournalPromptView: View {
     
-    // 1. PROPERTI BARU (Mirip JournalView)
     @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) private var colorScheme
     
-    var entryToEdit: JournalEntry? = nil // Untuk mode Edit
-    var newPromptText: String? = nil    // Untuk mode Entri Baru
+    var entryToEdit: JournalEntry? = nil
+    var newPromptText: String? = nil
     var onSaveComplete: () -> Void
     
-    // State untuk menyimpan data
-    @State private var journalText: String = "" // Jawaban pengguna
-    @State private var promptText: String = ""  // Teks prompt
+    @State private var journalText: String = ""
+    @State private var promptText: String = ""
     @State private var selectedMood: Int? = nil
     @State private var date: Date = Date()
     @State private var selectedEmoji: String = "😊"
     @FocusState private var isTextEditorFocused: Bool
     
-    // Mapping (harus sama dengan JournalView)
     private let moodEmojis = ["😡", "😢", "😊", "😐"]
     private let moodImages = ["Image 1", "Image 2", "Image 3", "Image 4"]
 
     var body: some View {
         ZStack {
             VStack(spacing: 20) {
-                
-                // Header
+
                 HStack {
                     Button(action: { dismiss() }) {
                         Image(systemName: "chevron.left")
@@ -60,7 +56,6 @@ struct JournalPromptView: View {
                 Text("How was your day?")
                     .font(.headline).foregroundColor(.primary).padding(.top, 10)
 
-                // Mood selector
                 HStack(spacing: 16) {
                     ForEach(0..<moodImages.count, id: \.self) { index in
                         moodButton(index: index, imageName: moodImages[index])
@@ -68,22 +63,18 @@ struct JournalPromptView: View {
                 }
                 .padding(.horizontal)
 
-                //Spacer(minLength: 10)
-
-                // Kotak Prompt
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Prompt of day")
-                        .font(.headline).fontWeight(.bold).foregroundColor(.primary) // Disesuaikan
-                    
-                    // Gunakan @State promptText
+                        .font(.headline).fontWeight(.bold).foregroundColor(.primary)
+
                     Text(promptText)
-                        .font(.subheadline).foregroundColor(.secondary) // Disesuaikan
+                        .font(.subheadline).foregroundColor(.secondary)
                         .multilineTextAlignment(.leading)
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 .padding()
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(.thinMaterial) // Disesuaikan
+                .background(.thinMaterial)
                 .overlay(
                     RoundedRectangle(cornerRadius: 14, style: .continuous)
                         .stroke(Color.gray.opacity(0.5), lineWidth: 1)
@@ -91,7 +82,6 @@ struct JournalPromptView: View {
                 .cornerRadius(14)
                 .padding(.horizontal)
 
-                // Text Editor
                 ZStack(alignment: .topLeading) {
                     RoundedRectangle(cornerRadius: 20, style: .continuous)
                         .fill(colorScheme == .dark ? Color.white.opacity(0.65)
@@ -102,7 +92,7 @@ struct JournalPromptView: View {
                         )
                         .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
                     VStack(alignment: .leading, spacing: 0) {
-                        TextEditor(text: $journalText) // Gunakan @State journalText
+                        TextEditor(text: $journalText)
                             
                             .textEditorStyle(.plain)
                             .scrollContentBackground(.hidden)
@@ -110,7 +100,7 @@ struct JournalPromptView: View {
                             .frame(maxWidth: .infinity)
                             .focused($isTextEditorFocused)
                     }
-                    .padding(.horizontal, 18) // Padding konsisten
+                    .padding(.horizontal, 18)
                     .padding(.vertical, 16)
 
                     if journalText.isEmpty {
@@ -121,11 +111,9 @@ struct JournalPromptView: View {
                     }
                 }
                 .padding(.horizontal)
-                //.padding(.top, 20)
             }
             .padding(.bottom)
             .onAppear {
-                // 2. FUNGSI BARU UNTUK MEMUAT DATA
                 loadExistingEntry()
             }
         }
@@ -137,7 +125,6 @@ struct JournalPromptView: View {
         }
     }
 
-    // Mood Button (Sudah benar dari sebelumnya)
     @ViewBuilder
     private func moodButton(index: Int, imageName: String) -> some View {
         let isSelected = selectedMood == index
@@ -167,58 +154,42 @@ struct JournalPromptView: View {
         .buttonStyle(.plain)
     }
 
-    // MARK: - File Handling (DI-UPGRADE)
-    
-    // 3. FUNGSI BARU: loadExistingEntry
     private func loadExistingEntry() {
         if let entry = entryToEdit {
-            // --- MODE EDIT ---
-            // Pecah teks "Prompt: [teks]\n\n[jawaban]"
             let components = entry.text.components(separatedBy: "\n\n")
             if components.count >= 2 {
-                // Ambil prompt (menghapus "Prompt: ")
                 self.promptText = components[0].replacingOccurrences(of: "Prompt: ", with: "")
-                // Ambil sisanya sebagai jawaban
                 self.journalText = components.dropFirst().joined(separator: "\n\n")
             } else {
-                // Fallback jika formatnya aneh
                 self.promptText = "Error loading prompt"
                 self.journalText = entry.text
             }
             
-            // Muat data lain (copy dari JournalView.loadExistingEntry)
             self.selectedEmoji = entry.feelingEmoji
             if let moodIndex = moodEmojis.firstIndex(of: entry.feelingEmoji) {
                 self.selectedMood = moodIndex
             }
             
         } else if let newPrompt = newPromptText {
-            // --- MODE ENTRI BARU ---
             self.promptText = newPrompt
-            // (journalText sudah otomatis "" dari @State)
         }
     }
     
-    // 4. FUNGSI UPGRADE: saveEntry (Bisa Edit & Tambah)
     private func saveEntry() {
         var entries = FileManagerHelper.load(from: date)
-        
-        // Gabungkan kembali teksnya
         let fullJournalText = "Prompt: \(promptText)\n\n\(journalText)"
 
         if let entryToEdit = entryToEdit {
-            // --- MODE EDIT ---
             if let index = entries.firstIndex(where: { $0.id == entryToEdit.id }) {
                 if journalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                     entries.remove(at: index)
                 } else {
-                    entries[index].text = fullJournalText // Simpan teks yang sudah digabung
+                    entries[index].text = fullJournalText
                     entries[index].feelingEmoji = selectedEmoji
                     entries[index].date = Date()
                 }
             }
         } else {
-            // --- MODE ENTRI BARU ---
             guard !journalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
                 dismiss()
                 return
@@ -227,14 +198,12 @@ struct JournalPromptView: View {
             let newEntry = JournalEntry(date: newEntryDate, feelingEmoji: selectedEmoji, text: fullJournalText)
             entries.append(newEntry)
         }
-         
         FileManagerHelper.save(entries: entries, for: date)
         onSaveComplete()
         dismiss()
     }
     
     private func createDate(from selectedDate: Date) -> Date {
-        // (Helper function ini tidak berubah)
         let calendar = Calendar.current
         let dateComponents = calendar.dateComponents([.year, .month, .day], from: selectedDate)
         let timeComponents = calendar.dateComponents([.hour, .minute, .second], from: Date())
@@ -249,10 +218,8 @@ struct JournalPromptView: View {
     }
 }
 
-// 5. PERBARUI PREVIEW
 #Preview {
     JournalPromptView(
-        // Gunakan 'newPromptText' untuk preview
         newPromptText: "This is a preview prompt. What are you grateful for today?",
         onSaveComplete: {
             print("Preview save complete!")
