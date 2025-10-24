@@ -17,6 +17,7 @@ struct JournalView: View {
     @State private var date: Date = Date()
     @State private var selectedEmoji: String = "😊"
     var entryToEdit: JournalEntry?
+    var selectedDate: Date? = nil
     var feelingEmoji: String
     
     var onSaveComplete: () -> Void
@@ -165,11 +166,17 @@ struct JournalView: View {
         if let entry = entryToEdit {
             journalText = entry.text
             selectedEmoji = entry.feelingEmoji
+            self.date = entry.date
             
             if let moodIndex = moodEmojis.firstIndex(of: entry.feelingEmoji) {
                 selectedMood = moodIndex
             }
         } else {
+            if let dateFromMain = selectedDate {
+                self.date = dateFromMain
+            } else {
+                self.date = Date()
+            }
             selectedEmoji = feelingEmoji
             if let moodIndex = moodEmojis.firstIndex(of: feelingEmoji) {
                 selectedMood = moodIndex

@@ -12,6 +12,7 @@ struct PromptView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) private var colorScheme
     
+    var selectedDate: Date
     var onComplete: () -> Void
     
     @State var moveToJournalPromptView = false
@@ -46,7 +47,7 @@ struct PromptView: View {
                         .foregroundStyle(.white)
                         .lineLimit(3)
                         .padding(.bottom)
-
+                    
                 }
                 .padding()
                 .frame(width: 350)
@@ -69,7 +70,7 @@ struct PromptView: View {
                                     .fill(colorScheme == .dark ? Color.white.opacity(0.6) : Color.black.opacity(0.6))
                                     .blur(radius: 7)
                             }
-                            )
+                        )
                         .overlay(
                             RoundedRectangle(cornerRadius: 16)
                                 .stroke(Color.white.opacity(0.3), lineWidth: 1)
@@ -92,7 +93,7 @@ struct PromptView: View {
                                     .fill(colorScheme == .dark ? Color.white.opacity(0.6) : Color.black.opacity(0.6))
                                     .blur(radius: 7)
                             }
-                            )
+                        )
                         .overlay(
                             RoundedRectangle(cornerRadius: 16)
                                 .stroke(Color.white.opacity(0.3), lineWidth: 1)
@@ -108,6 +109,8 @@ struct PromptView: View {
         }
         .navigationDestination(isPresented: $moveToJournalPromptView) {
             JournalPromptView(
+                entryToEdit: nil,
+                selectedDate: selectedDate,
                 newPromptText: todayPrompt,
                 onSaveComplete: {
                     onComplete()
@@ -117,6 +120,7 @@ struct PromptView: View {
         .navigationDestination(isPresented: $moveToJournalView) {
             JournalView(
                 entryToEdit: nil,
+                selectedDate: selectedDate,
                 feelingEmoji: "😊",
                 onSaveComplete : {
                     onComplete()
@@ -124,22 +128,34 @@ struct PromptView: View {
             )
         }
         .onAppear {
-            let currentDate = getCurrentDateString()
-            let savedDate = UserDefaults.standard.string(forKey: "lastPromptDate")
-            let savedPrompt = UserDefaults.standard.string(forKey: "todayPrompt")
+            let dateToShow = selectedDate
+            let dateToShowString = getString(for: dateToShow)
+            let todayString = getString(for: Date())
             
-            if savedDate == currentDate, let prompt = savedPrompt {
-                todayPrompt = prompt
+            if dateToShowString == todayString {
+                let savedDate = UserDefaults.standard.string(forKey: "lastPromptDate")
+                let savedPrompt = UserDefaults.standard.string(forKey: "todayPrompt")
+                
+                if savedDate == todayString, let prompt = savedPrompt {
+                    todayPrompt = prompt
+                } else {
+                    let lastIndex = UserDefaults.standard.integer(forKey: "lastPromptIndex")
+                    let newIndex = (lastIndex + 1) % prompt.promptJournal.count
+                    let newPrompt = prompt.promptJournal[newIndex]
+                    
+                    UserDefaults.standard.set(newPrompt, forKey: "todayPrompt")
+                    UserDefaults.standard.set(todayString, forKey: "lastPromptDate")
+                    UserDefaults.standard.set(newIndex, forKey: "lastPromptIndex")
+                    
+                    todayPrompt = newPrompt
+                }
+                
             } else {
-                let lastIndex = UserDefaults.standard.integer(forKey: "lastPromptIndex")
-                let newIndex = (lastIndex + 1) % prompt.promptJournal.count
-                let newPrompt = prompt.promptJournal[newIndex]
+                let dayOfYear = Calendar.current.ordinality(of: .day, in: .year, for: dateToShow) ?? 1
+                let promptCount = prompt.promptJournal.count
+                let index = (dayOfYear - 1) % promptCount
                 
-                UserDefaults.standard.set(newPrompt, forKey: "todayPrompt")
-                UserDefaults.standard.set(currentDate, forKey: "lastPromptDate")
-                UserDefaults.standard.set(newIndex, forKey: "lastPromptIndex")
-                
-                todayPrompt = newPrompt
+                todayPrompt = prompt.promptJournal[index]
             }
         }
         .navigationBarBackButtonHidden(true)
@@ -148,15 +164,17 @@ struct PromptView: View {
         
     }
     
-    
-    func getCurrentDateString() -> String {
+    func getString(for date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
-        return formatter.string(from: Date())
+        return formatter.string(from: date)
     }
     
 }
 
 #Preview {
-    PromptView(onComplete: { print("Preview complete") })
+    PromptView(
+        selectedDate: Date(),
+        onComplete: { print("Preview complete") }
+    )
 }
