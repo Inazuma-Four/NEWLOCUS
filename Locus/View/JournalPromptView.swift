@@ -7,6 +7,7 @@ struct JournalPromptView: View {
     @Environment(\.colorScheme) private var colorScheme
     
     var entryToEdit: JournalEntry? = nil
+    var selectedDate: Date? = nil
     var newPromptText: String? = nil
     var onSaveComplete: () -> Void
     
@@ -19,11 +20,11 @@ struct JournalPromptView: View {
     
     private let moodEmojis = ["😡", "😢", "😊", "😐"]
     private let moodImages = ["Image 1", "Image 2", "Image 3", "Image 4"]
-
+    
     var body: some View {
         ZStack {
             VStack(spacing: 20) {
-
+                
                 HStack {
                     Button(action: { dismiss() }) {
                         Image(systemName: "chevron.left")
@@ -52,21 +53,21 @@ struct JournalPromptView: View {
                     .clipShape(Circle()).buttonStyle(.glass)
                 }
                 .padding(.horizontal).padding(.top, 5)
-
+                
                 Text("How was your day?")
                     .font(.headline).foregroundColor(.primary).padding(.top, 10)
-
+                
                 HStack(spacing: 16) {
                     ForEach(0..<moodImages.count, id: \.self) { index in
                         moodButton(index: index, imageName: moodImages[index])
                     }
                 }
                 .padding(.horizontal)
-
+                
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Prompt of day")
                         .font(.headline).fontWeight(.bold).foregroundColor(.primary)
-
+                    
                     Text(promptText)
                         .font(.subheadline).foregroundColor(.secondary)
                         .multilineTextAlignment(.leading)
@@ -81,7 +82,7 @@ struct JournalPromptView: View {
                 )
                 .cornerRadius(14)
                 .padding(.horizontal)
-
+                
                 ZStack(alignment: .topLeading) {
                     RoundedRectangle(cornerRadius: 20, style: .continuous)
                         .fill(colorScheme == .dark ? Color.white.opacity(0.65)
@@ -93,7 +94,7 @@ struct JournalPromptView: View {
                         .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
                     VStack(alignment: .leading, spacing: 0) {
                         TextEditor(text: $journalText)
-                            
+                        
                             .textEditorStyle(.plain)
                             .scrollContentBackground(.hidden)
                             .foregroundColor(.white)
@@ -102,7 +103,7 @@ struct JournalPromptView: View {
                     }
                     .padding(.horizontal, 18)
                     .padding(.vertical, 16)
-
+                    
                     if journalText.isEmpty {
                         Text("Write your thoughts here...")
                             .foregroundColor(.white.opacity(0.7))
@@ -124,7 +125,7 @@ struct JournalPromptView: View {
             isTextEditorFocused = false
         }
     }
-
+    
     @ViewBuilder
     private func moodButton(index: Int, imageName: String) -> some View {
         let isSelected = selectedMood == index
@@ -153,7 +154,7 @@ struct JournalPromptView: View {
         }
         .buttonStyle(.plain)
     }
-
+    
     private func loadExistingEntry() {
         if let entry = entryToEdit {
             let components = entry.text.components(separatedBy: "\n\n")
@@ -165,6 +166,7 @@ struct JournalPromptView: View {
                 self.journalText = entry.text
             }
             
+            self.date = entry.date
             self.selectedEmoji = entry.feelingEmoji
             if let moodIndex = moodEmojis.firstIndex(of: entry.feelingEmoji) {
                 self.selectedMood = moodIndex
@@ -172,13 +174,18 @@ struct JournalPromptView: View {
             
         } else if let newPrompt = newPromptText {
             self.promptText = newPrompt
+            if let dateFromMain = selectedDate { // <-- TAMBAHKAN IF-ELSE INI
+                self.date = dateFromMain
+            } else {
+                self.date = Date() // Fallback jika terjadi kesalahan
+            }
         }
     }
     
     private func saveEntry() {
         var entries = FileManagerHelper.load(from: date)
         let fullJournalText = "Prompt: \(promptText)\n\n\(journalText)"
-
+        
         if let entryToEdit = entryToEdit {
             if let index = entries.firstIndex(where: { $0.id == entryToEdit.id }) {
                 if journalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {

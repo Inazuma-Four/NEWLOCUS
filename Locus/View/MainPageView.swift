@@ -23,7 +23,7 @@ struct MainPageView: View {
             ZStack {
                 VStack(spacing: 0) {
                     headerView
-
+                    
                     HorizontalCalendarView(selectedDate: $selectedDate, showingFullCalendar: $showingFullCalendar)
                         .padding(.bottom, 20)
                     journalDisplayView
@@ -51,20 +51,22 @@ struct MainPageView: View {
                         
                         onSaveComplete: {
                             loadEntries(for: selectedDate)
+                            showingJournalEntryView = false
                         }
                     )
                 }
             }
             .navigationDestination(isPresented: $showingJournalPromptView) {
-                            if let entry = entryToEdit {
-                                JournalPromptView(
-                                    entryToEdit: entry,
-                                    onSaveComplete: {
-                                        loadEntries(for: selectedDate)
-                                    }
-                                )
-                            }
+                if let entry = entryToEdit {
+                    JournalPromptView(
+                        entryToEdit: entry,
+                        onSaveComplete: {
+                            loadEntries(for: selectedDate)
+                            showingJournalPromptView = false
                         }
+                    )
+                }
+            }
         }
         .appBackground()
         .navigationBarBackButtonHidden(true)
@@ -91,9 +93,13 @@ struct MainPageView: View {
             }
         }
         .navigationDestination(isPresented: $promptView, destination: {
-            PromptView(onComplete: {
-                promptView = false
-            })
+            PromptView(
+                selectedDate: selectedDate, // <-- TAMBAHKAN INI
+                onComplete: {
+                    promptView = false
+                    loadEntries(for: selectedDate) // <-- (OPSIONAL) Bagus untuk refresh list
+                }
+            )
         })
         .padding()
     }
@@ -253,7 +259,7 @@ struct HorizontalCalendarView: View {
                     }
                 }
             }
-    
+            
             Button(action: { showingFullCalendar = true }) {
                 Image(systemName: "calendar")
                     .font(.title2)
@@ -341,7 +347,7 @@ struct FullCalendarView: View {
                         .fill(colorScheme == .dark ? Color.white.opacity(0.6) : Color.black.opacity(0.6))
                         .blur(radius: 7)
                 }
-                )
+            )
             .overlay(
                 RoundedRectangle(cornerRadius: 16)
                     .stroke(Color.white.opacity(0.3), lineWidth: 1)

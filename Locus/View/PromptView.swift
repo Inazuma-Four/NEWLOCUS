@@ -12,6 +12,7 @@ struct PromptView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) private var colorScheme
     
+    var selectedDate: Date
     var onComplete: () -> Void
     
     @State var moveToJournalPromptView = false
@@ -46,7 +47,7 @@ struct PromptView: View {
                         .foregroundStyle(.white)
                         .lineLimit(3)
                         .padding(.bottom)
-
+                    
                 }
                 .padding()
                 .frame(width: 350)
@@ -69,7 +70,7 @@ struct PromptView: View {
                                     .fill(colorScheme == .dark ? Color.white.opacity(0.6) : Color.black.opacity(0.6))
                                     .blur(radius: 7)
                             }
-                            )
+                        )
                         .overlay(
                             RoundedRectangle(cornerRadius: 16)
                                 .stroke(Color.white.opacity(0.3), lineWidth: 1)
@@ -92,7 +93,7 @@ struct PromptView: View {
                                     .fill(colorScheme == .dark ? Color.white.opacity(0.6) : Color.black.opacity(0.6))
                                     .blur(radius: 7)
                             }
-                            )
+                        )
                         .overlay(
                             RoundedRectangle(cornerRadius: 16)
                                 .stroke(Color.white.opacity(0.3), lineWidth: 1)
@@ -108,6 +109,8 @@ struct PromptView: View {
         }
         .navigationDestination(isPresented: $moveToJournalPromptView) {
             JournalPromptView(
+                entryToEdit: nil, // <-- TAMBAHKAN nil untuk konsistensi
+                selectedDate: selectedDate, // <-- TAMBAHKAN INI
                 newPromptText: todayPrompt,
                 onSaveComplete: {
                     onComplete()
@@ -117,6 +120,7 @@ struct PromptView: View {
         .navigationDestination(isPresented: $moveToJournalView) {
             JournalView(
                 entryToEdit: nil,
+                selectedDate: selectedDate,
                 feelingEmoji: "😊",
                 onSaveComplete : {
                     onComplete()
@@ -158,5 +162,8 @@ struct PromptView: View {
 }
 
 #Preview {
-    PromptView(onComplete: { print("Preview complete") })
+    PromptView(
+            selectedDate: Date(), // <-- TAMBAHKAN INI
+            onComplete: { print("Preview complete") }
+        )
 }
