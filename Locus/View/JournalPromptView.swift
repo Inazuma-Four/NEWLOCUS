@@ -1,3 +1,10 @@
+//
+//  JournalPromptView.swift
+//  Locus
+//
+//  Created by Gaetano Pascarella on 17/10/25.
+//
+
 import SwiftUI
 
 
@@ -174,10 +181,10 @@ struct JournalPromptView: View {
             
         } else if let newPrompt = newPromptText {
             self.promptText = newPrompt
-            if let dateFromMain = selectedDate { // <-- TAMBAHKAN IF-ELSE INI
+            if let dateFromMain = selectedDate {
                 self.date = dateFromMain
             } else {
-                self.date = Date() // Fallback jika terjadi kesalahan
+                self.date = Date()
             }
         }
     }

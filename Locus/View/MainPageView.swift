@@ -94,10 +94,10 @@ struct MainPageView: View {
         }
         .navigationDestination(isPresented: $promptView, destination: {
             PromptView(
-                selectedDate: selectedDate, // <-- TAMBAHKAN INI
+                selectedDate: selectedDate,
                 onComplete: {
                     promptView = false
-                    loadEntries(for: selectedDate) // <-- (OPSIONAL) Bagus untuk refresh list
+                    loadEntries(for: selectedDate)
                 }
             )
         })

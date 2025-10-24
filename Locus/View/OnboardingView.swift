@@ -10,7 +10,7 @@ struct GlassButton: View {
     var text: String
     var action: () -> Void
     @Environment(\.colorScheme) private var colorScheme
-
+    
     var body: some View {
         Button(action: action) {
             Text(text)
@@ -23,7 +23,7 @@ struct GlassButton: View {
                             .fill(colorScheme == .dark ? Color.white.opacity(0.6) : Color.black.opacity(0.6))
                             .blur(radius: 7)
                     }
-                    )
+                )
                 .overlay(
                     RoundedRectangle(cornerRadius: 16)
                         .stroke(Color.white.opacity(0.3), lineWidth: 1)
@@ -39,32 +39,32 @@ struct OnboardingView: View {
     @Environment(\.colorScheme) private var colorScheme
     @Binding var hasSeenOnboarding: Bool
     @State private var pageIndex = 0
-
+    
     var body: some View {
         ZStack {
             Group {
-                    if colorScheme == .dark {
-                        LinearGradient(
-                            colors: [
-                                Color.black,
-                                Color(red: 0.3, green: 0.3, blue: 0.35)
-                            ],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        )
-                    } else {
-                        LinearGradient(
-                            colors: [
-                                Color.white,
-                                Color(red: 0.7, green: 0.7, blue: 0.75)
-                            ],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        )
-                    }
+                if colorScheme == .dark {
+                    LinearGradient(
+                        colors: [
+                            Color.black,
+                            Color(red: 0.3, green: 0.3, blue: 0.35)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                } else {
+                    LinearGradient(
+                        colors: [
+                            Color.white,
+                            Color(red: 0.7, green: 0.7, blue: 0.75)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
                 }
-                .ignoresSafeArea()
-
+            }
+            .ignoresSafeArea()
+            
             
             VStack {
                 Spacer()
@@ -80,7 +80,7 @@ struct OnboardingView: View {
                                 .multilineTextAlignment(.center)
                                 .padding(.horizontal, 40)
                         }
-
+                        
                     case 1:
                         VStack(spacing: 20) {
                             Image(systemName: "graduationcap")
@@ -97,7 +97,7 @@ struct OnboardingView: View {
                                 .multilineTextAlignment(.center)
                                 .padding(.horizontal, 40)
                         }
-
+                        
                     case 2:
                         VStack(spacing: 20) {
                             Image(systemName: "pencil.and.outline")
@@ -116,34 +116,34 @@ struct OnboardingView: View {
                                 .multilineTextAlignment(.center)
                                 .padding(.horizontal, 40)
                         }
-
+                        
                     default:
                         EmptyView()
                     }
                 }
-
+                
                 Spacer()
-
+                
                 switch pageIndex {
                 case 0:
                     GlassButton(text: "Get Started") {
                         withAnimation { pageIndex = 1 }
                     }
                     .padding(.bottom, 10)
-
+                    
                 case 1:
                     GlassButton(text: "Continue") {
                         withAnimation { pageIndex = 2 }
                     }
                     .padding(.bottom, 10)
-
+                    
                 case 2:
                     GlassButton(text: "Start Journey") {
                         hasSeenOnboarding = true
                         moveToMainPageView = true
                     }
                     .padding(.bottom, 10)
-
+                    
                 default:
                     MainPageView()
                 }
@@ -153,8 +153,8 @@ struct OnboardingView: View {
             MainPageView()
         })
     }
-        
-
+    
+    
 }
 
 #Preview {

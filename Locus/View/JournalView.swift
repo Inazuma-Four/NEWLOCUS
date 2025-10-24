@@ -172,10 +172,10 @@ struct JournalView: View {
                 selectedMood = moodIndex
             }
         } else {
-            if let dateFromMain = selectedDate { // <-- TAMBAHKAN IF-ELSE INI
+            if let dateFromMain = selectedDate {
                 self.date = dateFromMain
             } else {
-                self.date = Date() // Fallback
+                self.date = Date()
             }
             selectedEmoji = feelingEmoji
             if let moodIndex = moodEmojis.firstIndex(of: feelingEmoji) {
